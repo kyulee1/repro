@@ -11,8 +11,11 @@ int main()
 {
  int i=0;
  int size = 14;
+ char *OW = InitObjWriter("repro.obj");
+
  printf("Start object emission\n");
- void* OW = InitObjWriter("repro.obj");
+
+
  if (!OW) {
 	printf("Error fail to init ObjWriter\n");
 	return 1;
@@ -20,6 +23,7 @@ int main()
 
  SwitchSection(OW, "text");
  EmitSymbolDef(OW, "foo");
+
  for(i=0; i<size; i++) {
 	if (i==1) {
 		// relocation at 1
@@ -27,13 +31,14 @@ int main()
 		i += 3;
 		continue;
 	}
+        EmitLoc(OW, i+2, 0);
 	EmitIntValue(OW, byte[i], 1); 
  }
 
 
- SwitchSection(OW, "data");
- EmitSymbolDef(OW, "eetype");
-	EmitSymbolRef(OW, "foo", 8, 0,0);
+ //SwitchSection(OW, "data");
+ //EmitSymbolDef(OW, "eetype");
+//	EmitSymbolRef(OW, "foo", 8, 0,0);
 
  FinishObjWriter(OW);
  return 0;
